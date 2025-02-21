@@ -30,6 +30,11 @@ class LinkDB(DataBase):
                          'VALUES (%s, %s, %s, %s)',
                          (link, modified_link, timestamp, expiration_time))
         self.conn.commit()
-        self.cur.execute(f"SELECT * FROM links WHERE links.initial = '{link}' ORDER BY links.id ASC")
+        self.cur.execute(f"SELECT * FROM links WHERE links.initial = '{link}' ORDER BY links.id DESC")
         data = self.cur.fetchone()
         return Link(data[2], data[4])
+
+    def check_link(self, modified_link):
+        self.cur.execute(f"SELECT * FROM links WHERE links.modified = '{modified_link}'")
+        data = self.cur.fetchone()
+        return Link(data[1], data[4])
